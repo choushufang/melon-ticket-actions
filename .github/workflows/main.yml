@@ -1,9 +1,9 @@
 name: Melon Ticket Monitoring
 
 on:
-  workflow_dispatch: # 讓你可以手動點按鈕執行
+  workflow_dispatch: # 開啟手動執行按鈕
   schedule:
-    - cron: '*/5 * * * *' # 每 5 分鐘自動在背景幫你跑一次
+    - cron: '*/5 * * * *' # 每 5 分鐘自動跑一次
 
 jobs:
   check-tickets:
@@ -13,20 +13,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Run Melon Ticket Monitor Action
+        uses: ./ # 關鍵：這行代表直接將你自己這個儲存庫當作套件載入執行！
         with:
-          node-version: 18
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run Monitoring Script
-        env:
-          MELON_ID: ${{ secrets.MELON_ID }}
-          MELON_PW: ${{ secrets.MELON_PW }}
-          NOTIFIER_HOOK_URL: ${{ secrets.NOTIFIER_HOOK_URL }}
-        run: |
-          npm install -g ts-node typescript
-          ts-node src/index.ts
+          # 將你設定的 Secrets 傳遞給 Action 內部使用
+          melon_id: ${{ secrets.MELON_ID }}
+          melon_pw: ${{ secrets.MELON_PW }}
+          notifier_hook_url: ${{ secrets.NOTIFIER_HOOK_URL }}
