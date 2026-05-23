@@ -1,14 +1,18 @@
 name: Melon Ticket Monitoring
 
 on:
-  workflow_dispatch: # 保持手動按鈕
+  workflow_dispatch: 
   schedule:
-    - cron: '*/5 * * * *' # 每 5 分鐘自動跑一次
+    - cron: '*/5 * * * *' 
 
 jobs:
   check-tickets:
     runs-on: ubuntu-latest
-    
+    strategy:
+      # Matrix 矩陣設定：讓三個場次並行跑
+      matrix:
+        schedule: ['100001', '100002', '100003'] # 👈 請把這三個換成你查到的三場 ID 數字！
+        
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -16,6 +20,6 @@ jobs:
       - name: Run Melon Ticket Monitor Action
         uses: ./
         with:
-          # 這裡必須精準使用作者指定的變數名稱：
-          product-id: '213277' # 直接把你的演唱會 ID 寫在這裡！
-          slack-incoming-webhook-url: ${{ secrets.NOTIFIER_HOOK_URL }} # 帶入你的 Discord 網址
+          product-id: '213277'
+          schedule-id: ${{ matrix.schedule }} # 👈 這裡會自動代入上面矩陣中的每一場 ID
+          slack-incoming-webhook-url: ${{ secrets.NOTIFIER_HOOK_URL }}
