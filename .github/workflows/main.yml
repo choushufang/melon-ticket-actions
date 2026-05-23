@@ -27,5 +27,6 @@ jobs:
           MELON_ID: ${{ secrets.MELON_ID }}
           MELON_PW: ${{ secrets.MELON_PW }}
           NOTIFIER_HOOK_URL: ${{ secrets.NOTIFIER_HOOK_URL }}
-        run: npm install -g ts-node typescript
-             ts-node src/index.ts
+        run: |
+          npm install -g ts-node typescript
+          ts-node src/index.ts
