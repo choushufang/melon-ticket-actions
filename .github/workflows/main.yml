@@ -9,9 +9,8 @@ jobs:
   check-tickets:
     runs-on: ubuntu-latest
     strategy:
-      # Matrix 矩陣設定：讓三個場次並行跑
       matrix:
-        schedule: ['100001', '100002', '100003'] # 👈 請把這三個換成你查到的三場 ID 數字！
+        schedule: ['100001', '100002', '100003']
         
     steps:
       - name: Checkout Repository
@@ -21,5 +20,6 @@ jobs:
         uses: ./
         with:
           product-id: '213277'
-          schedule-id: ${{ matrix.schedule }} # 👈 這裡會自動代入上面矩陣中的每一場 ID
+          schedule-id: ${{ matrix.schedule }}
+          seat-id: '0' # 👈 填入 '0' 代表不指定區域、監控全場
           slack-incoming-webhook-url: ${{ secrets.NOTIFIER_HOOK_URL }}
