@@ -1,7 +1,7 @@
 name: Melon Ticket Monitoring
 
 on:
-  workflow_dispatch: # 開啟手動執行按鈕
+  workflow_dispatch: # 保持手動按鈕
   schedule:
     - cron: '*/5 * * * *' # 每 5 分鐘自動跑一次
 
@@ -14,9 +14,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Melon Ticket Monitor Action
-        uses: ./ # 關鍵：這行代表直接將你自己這個儲存庫當作套件載入執行！
+        uses: ./
         with:
-          # 將你設定的 Secrets 傳遞給 Action 內部使用
-          melon_id: ${{ secrets.MELON_ID }}
-          melon_pw: ${{ secrets.MELON_PW }}
-          notifier_hook_url: ${{ secrets.NOTIFIER_HOOK_URL }}
+          # 這裡必須精準使用作者指定的變數名稱：
+          product-id: '213277' # 直接把你的演唱會 ID 寫在這裡！
+          slack-incoming-webhook-url: ${{ secrets.NOTIFIER_HOOK_URL }} # 帶入你的 Discord 網址
